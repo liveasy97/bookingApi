@@ -15,6 +15,7 @@ public class BookingConstants {
 	public static String uUnitIsNull = "Failed: Provide unit when rate is provided";
 	public static String uUnknownUnit = "Failed: Cannot provide unknown unit";
 	public static String uUpdateUnitRateIsNull = "Failed: Cannot Update Unit without providing rate";
+	public static String uCanelIsTrueWhenCompleteIsTrue = "Failed: Cannot assign cancel true when Completed is already true";
 	
 	public static String success = "Success";
 	

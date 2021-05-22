@@ -18,6 +18,7 @@ import com.Booking.Booking.Model.BookingPostResponse;
 import com.Booking.Booking.Model.BookingPutRequest;
 import com.Booking.Booking.Model.BookingPutResponse;
 
+
 @Service
 public class BookingServiceImpl implements BookingService{
 
@@ -147,8 +148,11 @@ public class BookingServiceImpl implements BookingService{
 		
 		if(request.getCancel()!=null) {
 			if(request.getCancel()==true) {
+				if(data.getCompleted()==true||request.getCompleted()==true) {
+					response.setStatus(constants.uCanelIsTrueWhenCompleteIsTrue);
+					return response;
+				}
 				data.setCancel(true);
-				data.setCompleted(false);
 			}else {
 				data.setCancel(false);
 			}
@@ -197,6 +201,8 @@ public class BookingServiceImpl implements BookingService{
 	@Override
 	public void deleteBooking(String bookingId) {
 		// TODO Auto-generated method stub
+		BookingData temp = bookingDao.findByBookingId(bookingId);
+		if(!Objects.isNull(temp))
 		 bookingDao.deleteById(bookingId);
 	}
 	
