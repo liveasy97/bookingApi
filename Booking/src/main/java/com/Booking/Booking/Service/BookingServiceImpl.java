@@ -51,20 +51,20 @@ public class BookingServiceImpl implements BookingService{
 		bookingData.setTruckId(request.getTruckId());
 		
 		if(request.getRate()!=null) {
-			if(request.getUnit()==null) {
+			if(request.getUnitValue()==null) {
 				response.setStatus(constants.pUnitIsNull);
 				return response;
 			}
-			if(request.getUnit().equals("perTon")) {
+			if(request.getUnitValue().equals("PER_TON")) {
 				bookingData.setUnitValue(BookingData.Unit.PER_TON);
-			}else if(request.getUnit().equals("perTruck")) {
+			}else if(request.getUnitValue().equals("PER_TRUCK")) {
 				bookingData.setUnitValue(BookingData.Unit.PER_TRUCK);
 			}else {
 				response.setStatus(constants.pUnknownUnit);
 				return response;
 			}
 		}else {
-			if(request.getUnit()!=null) {
+			if(request.getUnitValue()!=null) {
 				response.setStatus(constants.pPostUnitRateIsNull);
 				return response;
 			}
@@ -114,20 +114,20 @@ public class BookingServiceImpl implements BookingService{
 		}
 		
 		if(request.getRate()!=null) {
-			if(request.getUnit()==null) {
+			if(request.getUnitValue()==null) {
 				response.setStatus(constants.uUnitIsNull);
 				return response;
 			}
-			if(request.getUnit().equals("perTon")) {
+			if(request.getUnitValue().equals("PER_TON")) {
 				data.setUnitValue(BookingData.Unit.PER_TON);
-			}else if(request.getUnit().equals("perTruck")) {
+			}else if(request.getUnitValue().equals("PER_TRUCK")) {
 				data.setUnitValue(BookingData.Unit.PER_TRUCK);
 			}else {
 				response.setStatus(constants.uUnknownUnit);
 				return response;
 			}
 		}else {
-			if(request.getUnit()!=null) {
+			if(request.getUnitValue()!=null) {
 				response.setStatus(constants.uUpdateUnitRateIsNull);
 				return response;
 			}
