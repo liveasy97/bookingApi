@@ -13,7 +13,7 @@ public interface BookingService {
 	BookingPostResponse addBooking(BookingPostRequest request);
 	BookingPutResponse updateBooking(String bookingId, BookingPutRequest request);
 	BookingData getDataById(String Id);
-	List<BookingData> getDataById(Integer pageNo, Boolean cancel, Boolean completed);
+	List<BookingData> getDataById(Integer pageNo, Boolean cancel, Boolean completed, String transporterId, String postLoadId);
     void deleteBooking(String bookingId);
 
 }

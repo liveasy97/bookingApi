@@ -43,11 +43,15 @@ public class BookingServiceImpl implements BookingService{
 		}else if(request.getTruckId()==null||request.getTruckId().size()==0) {
 			response.setStatus(constants.pTruckIdIsNull);
 			return response;
+		}else if(request.getPostLoadId()==null){
+			response.setStatus(constants.pPostLoadIdIsNull);
+			return response;
 		}
 		
 		bookingData.setBookingId("booking:"+UUID.randomUUID());
 		bookingData.setLoadId(request.getLoadId());
 		bookingData.setTransporterId(request.getTransporterId());
+		bookingData.setPostLoadId(request.getPostLoadId());
 		bookingData.setTruckId(request.getTruckId());
 		
 		if(request.getRate()!=null) {
@@ -172,14 +176,20 @@ public class BookingServiceImpl implements BookingService{
 
 
 	@Override
-	public List<BookingData> getDataById(Integer pageNo, Boolean cancel, Boolean completed) {
+	public List<BookingData> getDataById(Integer pageNo, Boolean cancel, Boolean completed,String transporterId,String postLoadId) {
 		// TODO Auto-generated method stub
 		if(pageNo==null) {
 			pageNo=0;
 		}
 		Pageable p = PageRequest.of(pageNo,2);
 		List<BookingData> temp = null;
-		if(cancel==null&&completed!=null) {
+		if(transporterId!=null) {
+			return bookingDao.findByTransporterId(transporterId,p);
+		}
+		else if(postLoadId!=null) {
+			return bookingDao.findByPostLoadId(postLoadId,p);
+		}
+		else if(cancel==null&&completed!=null) {
 			temp = bookingDao.findByCompleted(completed,p);
 			if(temp.size()!=0)
 				return temp;
