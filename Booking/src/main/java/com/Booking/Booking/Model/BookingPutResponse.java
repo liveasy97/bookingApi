@@ -2,8 +2,6 @@ package com.Booking.Booking.Model;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import com.Booking.Booking.Entities.BookingData.Unit;
 
 import lombok.Data;
@@ -18,8 +16,6 @@ public @Data class BookingPutResponse {
 	private String postLoadId;
 	private Long rate;
 	private Unit unitValue;
-	@Column(name="truckIds")
-	@ElementCollection(targetClass=String.class)
 	private List<String> truckId;
 	private Boolean cancel;
 	private Boolean completed;
