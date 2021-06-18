@@ -8,7 +8,7 @@ import lombok.Data;
 public @Data class BookingPutRequest {
 
 	private Long rate;
-	private String unit;
+	private String unitValue;
 	private List<String> truckId;
 	private Boolean cancel;
 	private Boolean completed;

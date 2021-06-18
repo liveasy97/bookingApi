@@ -10,7 +10,7 @@ public @Data class BookingPostRequest {
 	private String transporterId;
 	private String loadId;
 	private Long rate;
-	private String unit;
+	private String unitValue;
 	private List<String> truckId;
 	
 }
