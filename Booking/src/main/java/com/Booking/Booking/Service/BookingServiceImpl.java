@@ -85,6 +85,15 @@ public class BookingServiceImpl implements BookingService{
 		
 		bookingDao.save(bookingData);
 		response.setStatus(constants.success);
+		response.setBookingId(bookingData.getBookingId());
+		response.setCancel(bookingData.getCancel());
+		response.setCompleted(bookingData.getCompleted());
+		response.setLoadId(bookingData.getLoadId());
+		response.setPostLoadId(bookingData.getPostLoadId());
+		response.setRate(bookingData.getRate());
+		response.setTransporterId(bookingData.getTransporterId());
+		response.setTruckId(bookingData.getTruckId());
+		response.setUnitValue(bookingData.getUnitValue());
 		return response;
 	}
 
@@ -164,6 +173,15 @@ public class BookingServiceImpl implements BookingService{
 		
 		bookingDao.save(data);
 		response.setStatus(constants.success);
+		response.setBookingId(data.getBookingId());
+		response.setCancel(data.getCancel());
+		response.setCompleted(data.getCompleted());
+		response.setLoadId(data.getLoadId());
+		response.setPostLoadId(data.getPostLoadId());
+		response.setRate(data.getRate());
+		response.setTransporterId(data.getTransporterId());
+		response.setTruckId(data.getTruckId());
+		response.setUnitValue(data.getUnitValue());
 		return response;
 	}
 
