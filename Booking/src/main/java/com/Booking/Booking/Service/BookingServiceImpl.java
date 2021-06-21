@@ -218,7 +218,7 @@ public class BookingServiceImpl implements BookingService{
 		if(pageNo==null) {
 			pageNo=0;
 		}
-		Pageable p = PageRequest.of(pageNo,2);
+		Pageable p = PageRequest.of(pageNo,15);
 		List<BookingData> temp = null;
 		
 		if((cancel==null||completed==null)&&(transporterId!=null||postLoadId!=null)) {
