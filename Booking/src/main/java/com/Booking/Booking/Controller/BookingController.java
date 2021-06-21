@@ -41,8 +41,8 @@ public class BookingController {
 	}
 	
 	@GetMapping("/booking")
-	public List<BookingData> getData(@RequestParam(value="pageNo",required=false) Integer pageNo,@RequestParam(value="cancel",required=false) Boolean cancel,@RequestParam(value="completed",required=false) Boolean completed){
-		return bookingService.getDataById(pageNo,cancel,completed);
+	public List<BookingData> getData(@RequestParam(value="pageNo",required=false) Integer pageNo,@RequestParam(value="cancel",required=false) Boolean cancel,@RequestParam(value="completed",required=false) Boolean completed, @RequestParam(value="transporterId",required=false) String transporterId,@RequestParam(value="postLoadId",required=false) String postLoadId){
+		return bookingService.getDataById(pageNo,cancel,completed,transporterId,postLoadId);
 	}
 	
 	@DeleteMapping("/booking/{bookingId}")

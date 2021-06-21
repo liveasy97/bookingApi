@@ -15,5 +15,10 @@ public interface BookingDao extends JpaRepository<BookingData,String>{
 	List<BookingData> findByCancelOrCompleted(Boolean cancel, Boolean completed, Pageable p);
 	List<BookingData> findByCompleted(Boolean completed, Pageable p);
 	List<BookingData> findByCancel(Boolean cancel, Pageable p);
-	
+	List<BookingData> findByTransporterId(String transporterId,Pageable p);
+	List<BookingData> findByPostLoadId(String postLoadId,Pageable p);
+	List<BookingData> findByTransporterIdAndCancelAndCompleted(String transporterId,Boolean cancel,Boolean completed,Pageable p);
+	List<BookingData> findByPostLoadIdAndCancelAndCompleted(String postLoadId,Boolean cancel,Boolean completed,Pageable p);
+	List<BookingData> findByCancelAndCompleted(Boolean cancel, Boolean completed, Pageable p);
+ 	
 }

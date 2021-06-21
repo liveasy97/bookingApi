@@ -22,6 +22,7 @@ public @Data class BookingData {
 	
 	private String transporterId;
 	private String loadId;
+	private String postLoadId;
 	private Long rate;
 	private Unit unitValue;
 	@Column(name="truckIds")
@@ -29,5 +30,7 @@ public @Data class BookingData {
 	private List<String> truckId;
 	private Boolean cancel;
 	private Boolean completed;
+	private String bookingDate;
+	private String completedDate;
 	
 }

@@ -1,6 +1,7 @@
 package com.Booking.Booking.Service;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -43,11 +44,15 @@ public class BookingServiceImpl implements BookingService{
 		}else if(request.getTruckId()==null||request.getTruckId().size()==0) {
 			response.setStatus(constants.pTruckIdIsNull);
 			return response;
+		}else if(request.getPostLoadId()==null){
+			response.setStatus(constants.pPostLoadIdIsNull);
+			return response;
 		}
 		
 		bookingData.setBookingId("booking:"+UUID.randomUUID());
 		bookingData.setLoadId(request.getLoadId());
 		bookingData.setTransporterId(request.getTransporterId());
+		bookingData.setPostLoadId(request.getPostLoadId());
 		bookingData.setTruckId(request.getTruckId());
 		
 		if(request.getRate()!=null) {
@@ -70,6 +75,10 @@ public class BookingServiceImpl implements BookingService{
 			}
 		}
 		
+		if(request.getBookingDate()!=null) {
+			bookingData.setBookingDate(request.getBookingDate());
+		}
+		
 		bookingData.setRate(request.getRate());
 		bookingData.setCancel(false);
 		bookingData.setCompleted(false);
@@ -81,6 +90,16 @@ public class BookingServiceImpl implements BookingService{
 		
 		bookingDao.save(bookingData);
 		response.setStatus(constants.success);
+		response.setBookingId(bookingData.getBookingId());
+		response.setCancel(bookingData.getCancel());
+		response.setCompleted(bookingData.getCompleted());
+		response.setLoadId(bookingData.getLoadId());
+		response.setPostLoadId(bookingData.getPostLoadId());
+		response.setRate(bookingData.getRate());
+		response.setTransporterId(bookingData.getTransporterId());
+		response.setTruckId(bookingData.getTruckId());
+		response.setUnitValue(bookingData.getUnitValue());
+		response.setBookingDate(bookingData.getBookingDate());
 		return response;
 	}
 
@@ -158,8 +177,30 @@ public class BookingServiceImpl implements BookingService{
 			}
 		}
 		
+		if(request.getBookingDate()!=null) {
+			data.setBookingDate(request.getBookingDate());
+		}
+		
+		if(request.getCompletedDate()!=null&&(data.getCompleted()==null||data.getCompleted()==false)) {
+			response.setStatus(constants.uCompletedDateWhenCompletedIsNotTrue);
+			return response;
+		}else if(request.getCompletedDate()!=null) {
+			data.setCompletedDate(request.getCompletedDate());
+		}
+		
 		bookingDao.save(data);
 		response.setStatus(constants.success);
+		response.setBookingId(data.getBookingId());
+		response.setCancel(data.getCancel());
+		response.setCompleted(data.getCompleted());
+		response.setLoadId(data.getLoadId());
+		response.setPostLoadId(data.getPostLoadId());
+		response.setRate(data.getRate());
+		response.setTransporterId(data.getTransporterId());
+		response.setTruckId(data.getTruckId());
+		response.setUnitValue(data.getUnitValue());
+		response.setBookingDate(data.getBookingDate());
+		response.setCompletedDate(data.getCompletedDate());
 		return response;
 	}
 
@@ -172,25 +213,43 @@ public class BookingServiceImpl implements BookingService{
 
 
 	@Override
-	public List<BookingData> getDataById(Integer pageNo, Boolean cancel, Boolean completed) {
+	public List<BookingData> getDataById(Integer pageNo, Boolean cancel, Boolean completed,String transporterId,String postLoadId) {
 		// TODO Auto-generated method stub
 		if(pageNo==null) {
 			pageNo=0;
 		}
 		Pageable p = PageRequest.of(pageNo,2);
 		List<BookingData> temp = null;
-		if(cancel==null&&completed!=null) {
-			temp = bookingDao.findByCompleted(completed,p);
-			if(temp.size()!=0)
-				return temp;
-		}else if(cancel!=null&&completed==null) {
-			temp = bookingDao.findByCancel(cancel,p);
-			if(temp.size()!=0)
-				return temp;
-		}else if(cancel!=null&&completed!=null) {
-			temp = bookingDao.findByCancelOrCompleted(cancel,completed,p);
-			if(temp.size()!=0)
-				return temp;
+		
+		if((cancel==null||completed==null)&&(transporterId!=null||postLoadId!=null)) {
+			List<BookingData> emptyList = Collections.<BookingData>emptyList();  
+			return emptyList;
+		}
+		
+		if(cancel!=null&&completed!=null&&cancel==true&&completed==true)
+		{
+			List<BookingData> emptyList = Collections.<BookingData>emptyList();  
+			return emptyList;
+		}
+
+		if(transporterId!=null && postLoadId!=null )
+		{
+			List<BookingData> emptyList = Collections.<BookingData>emptyList();  
+			return emptyList;
+		}
+
+		
+		if( transporterId!=null)
+		{
+			return bookingDao.findByTransporterIdAndCancelAndCompleted(transporterId, cancel, completed, p);
+		}
+
+		if(postLoadId != null) {
+			return bookingDao.findByPostLoadIdAndCancelAndCompleted(postLoadId, cancel, completed, p);
+		}
+		
+		if(cancel!=null&&completed!=null) {
+			return bookingDao.findByCancelAndCompleted(cancel, completed, p);
 		}
 		
 		return bookingDao.findAll();
