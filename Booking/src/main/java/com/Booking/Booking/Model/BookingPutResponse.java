@@ -19,6 +19,8 @@ public @Data class BookingPutResponse {
 	private List<String> truckId;
 	private Boolean cancel;
 	private Boolean completed;
+	private String bookingDate;
+	private String completedDate;
 	
 	
 }
