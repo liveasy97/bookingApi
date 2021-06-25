@@ -2,15 +2,18 @@ package com.Booking.Booking.Model;
 
 import java.util.List;
 
-
 import com.Booking.Booking.Entities.BookingData.Unit;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public @Data class BookingPostResponse {
 
 	private String status;
-	
+
 	private String bookingId;
 	private String transporterId;
 	private String loadId;
@@ -22,5 +25,5 @@ public @Data class BookingPostResponse {
 	private Boolean completed;
 	private String bookingDate;
 	private String completedDate;
-	
+
 }
