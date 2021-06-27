@@ -28,6 +28,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       
+      
     - run: cd ~/actions-runner/deploy/bookingApi/bookingApi
     - run: sudo docker container stop test || true
     - run: sudo docker container stop docker-postgres || true
