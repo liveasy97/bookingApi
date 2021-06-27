@@ -33,8 +33,9 @@ jobs:
     - run: sudo docker container stop test || true
     - run: sudo docker container stop docker-postgres || true
     - run: sudo docker container prune -f
-    - run: sudo docker image rm booking
+    - run: sudo docker image rm booking || true
     - run: sudo docker build -t booking .
-    - run: sudo docker run --name docker-postgres -e POSTGRES_ROOT_PASSWORD=Varun09! -e POSTGRES_DATABASE=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Varun09! -d postgres:alpine 
+    - run: sudo docker run --name docker-postgres -e POSTGRES_ROOT_PASSWORD=Varun09! -e POSTGRES_DATABASE=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Varun09! -d postgres:alpine
+    - run: sudo docker run -p 8090:8090 --name test --link docker-postgres:postgres booking | echo "success" 
  
     
