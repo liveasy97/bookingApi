@@ -12,9 +12,9 @@ on:
 defaults:
   run:
     working-directory: ./Booking
+    
 jobs:
   build:
-
     runs-on: self-hosted
 
     steps:
