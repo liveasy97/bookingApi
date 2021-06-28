@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.Booking.Booking.Entities.BookingData.Unit;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
