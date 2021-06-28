@@ -4,7 +4,8 @@ import java.util.List;
 
 import lombok.Data;
 
-
+@AllArgsConstructor
+@NoArgsConstructor
 public @Data class BookingPostRequest {
 
 	private String transporterId;
