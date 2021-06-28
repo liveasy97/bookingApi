@@ -7,6 +7,8 @@ import com.Booking.Booking.Entities.BookingData.Unit;
 
 import lombok.Data;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public @Data class BookingPostResponse {
 
 	private String status;
