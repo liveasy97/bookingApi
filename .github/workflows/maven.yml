@@ -38,4 +38,3 @@ jobs:
     - run: sudo docker run --name docker-postgres-booking -e POSTGRES_ROOT_PASSWORD=Varun09! -e POSTGRES_DATABASE=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Varun09! -d postgres:alpine
     - run: sudo docker run -p 8090:8090 --name test-booking --link docker-postgres-booking:postgres booking | echo "success" 
  
-    
