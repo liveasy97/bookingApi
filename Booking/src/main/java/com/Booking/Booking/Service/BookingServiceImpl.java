@@ -1,19 +1,15 @@
 package com.Booking.Booking.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-
-import com.Booking.Booking.EntityNotFoundException;
-import com.Booking.Booking.RestExceptionHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.stereotype.Service;
 
+import com.Booking.Booking.ApiErrors.BusinessException;
+import com.Booking.Booking.ApiErrors.EntityNotFoundException;
 import com.Booking.Booking.Constants.BookingConstants;
 import com.Booking.Booking.Dao.BookingDao;
 import com.Booking.Booking.Entities.BookingData;
@@ -97,7 +93,7 @@ public class BookingServiceImpl implements BookingService {
 		try {
 			bookingDao.save(bookingData);
 		} catch (Exception ex) {
-			log.error("------------------"+String.valueOf(ex));
+			log.error("------------------" + String.valueOf(ex));
 			log.info("----------------error");
 			throw ex;
 		}
@@ -133,14 +129,17 @@ public class BookingServiceImpl implements BookingService {
 			throw new EntityNotFoundException(BookingData.class, "bookingId", bookingId.toString());
 
 		if (request.getTruckId() != null && request.getTruckId().size() == 0) {
-			response.setStatus(constants.uTruckIdIsNull);
-			return response;
+
+			throw new BusinessException(BookingConstants.uTruckIdIsNull);
+//			response.setStatus(constants.uTruckIdIsNull);
+//			return response;
 		}
 
 		if (request.getCompleted() != null && request.getCancel() != null && request.getCancel() == true
 				&& request.getCompleted() == true) {
-			response.setStatus(constants.uCancelAndCompleteTrue);
-			return response;
+
+			throw new BusinessException(BookingConstants.uCancelAndCompleteTrue);
+			// return response;
 		}
 
 		if (request.getTruckId() != null) {
@@ -149,21 +148,28 @@ public class BookingServiceImpl implements BookingService {
 
 		if (request.getRate() != null) {
 			if (request.getUnitValue() == null) {
-				response.setStatus(constants.uUnitIsNull);
-				return response;
+
+				throw new BusinessException(BookingConstants.uUnitIsNull);
+//				response.setStatus(constants.uUnitIsNull);
+//				return response;
 			}
 			if (String.valueOf(request.getUnitValue()).equals("PER_TON")) {
 				data.setUnitValue(BookingData.Unit.PER_TON);
 			} else if (String.valueOf(request.getUnitValue()).equals("PER_TRUCK")) {
 				data.setUnitValue(BookingData.Unit.PER_TRUCK);
 			} else {
-				response.setStatus(constants.uUnknownUnit);
-				return response;
+
+				throw new BusinessException(BookingConstants.uUnknownUnit);
+//				response.setStatus(constants.uUnknownUnit);
+//				return response;
 			}
 		} else {
 			if (request.getUnitValue() != null) {
-				response.setStatus(constants.uUpdateUnitRateIsNull);
-				return response;
+
+				throw new BusinessException(BookingConstants.uUpdateUnitRateIsNull);
+
+//				response.setStatus(constants.uUpdateUnitRateIsNull);
+//				return response;
 			}
 		}
 
@@ -184,8 +190,10 @@ public class BookingServiceImpl implements BookingService {
 			if (request.getCancel() == true) {
 				if ((data.getCompleted() == true)
 						|| (request.getCompleted() != null && request.getCompleted() == true)) {
-					response.setStatus(constants.uCanelIsTrueWhenCompleteIsTrue);
-					return response;
+
+					throw new BusinessException(BookingConstants.uCanelIsTrueWhenCompleteIsTrue);
+//					response.setStatus(constants.uCanelIsTrueWhenCompleteIsTrue);
+//					return response;
 				}
 				data.setCancel(true);
 			} else {
@@ -198,8 +206,9 @@ public class BookingServiceImpl implements BookingService {
 		}
 
 		if (request.getCompletedDate() != null && (data.getCompleted() == null || data.getCompleted() == false)) {
-			response.setStatus(constants.uCompletedDateWhenCompletedIsNotTrue);
-			return response;
+			throw new BusinessException(BookingConstants.uCompletedDateWhenCompletedIsNotTrue);
+//			response.setStatus(constants.uCompletedDateWhenCompletedIsNotTrue);
+//			return response;
 		} else if (request.getCompletedDate() != null) {
 			data.setCompletedDate(request.getCompletedDate());
 		}
@@ -207,9 +216,9 @@ public class BookingServiceImpl implements BookingService {
 		try {
 			bookingDao.save(data);
 		} catch (Exception ex) {
-			log.error("------------------"+String.valueOf(ex));
+			log.error("------------------" + String.valueOf(ex));
 			log.info("----------------error");
-			
+
 			throw ex;
 
 		}

@@ -17,7 +17,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(name = "UniqueTransporterAndLoad", columnNames = {"transporterId", "loadid"})})
+@Table(uniqueConstraints = {
+		@UniqueConstraint(name = "UniqueTransporterAndLoad", columnNames = { "transporterId", "loadid" }) })
 @NoArgsConstructor
 @AllArgsConstructor
 public @Data class BookingData {
@@ -28,22 +29,22 @@ public @Data class BookingData {
 
 	@Id
 	private String bookingId;
-	
-	@NotBlank(message="Transporter Id can not be null")
+
+	@NotBlank(message = "Transporter Id can not be null")
 	private String transporterId;
-	@NotBlank(message="Load Id can not be null")
+	@NotBlank(message = "Load Id can not be null")
 	private String loadId;
-	@NotBlank(message="PostLoadId Id can not be null")
+	@NotBlank(message = "PostLoadId Id can not be null")
 	private String postLoadId;
-	
+
 	private Long rate;
 	private Unit unitValue;
-	
+
 	@Column(name = "truckIds")
 	@ElementCollection(targetClass = String.class)
 	@NotEmpty
 	private List<String> truckId;
-	
+
 	private Boolean cancel;
 	private Boolean completed;
 	private String bookingDate;

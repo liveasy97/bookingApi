@@ -130,7 +130,6 @@ public class ApiTestRestAssured {
 
 		}
 
-
 		BookingPostRequest bookingPostRequest = new BookingPostRequest("transporterId:123", "load:123", "shipper:123",
 				(long) 20, BookingData.Unit.PER_TON, Arrays.asList("truck:123"), "12/11/2020");
 
@@ -453,8 +452,6 @@ public class ApiTestRestAssured {
 	@Order(13)
 	public void getBookingDataWithParam_Failed_Completed_True_Cancel_null_postLoadId() throws Exception {
 
-
-
 		Response response = RestAssured.given().param("postLoadId", "shipper:123").param("completed", true)
 				.header("accept", "application/json").header("Content-Type", "application/json").get().then().extract()
 				.response();
@@ -462,14 +459,11 @@ public class ApiTestRestAssured {
 		assertEquals(200, response.statusCode());
 		assertEquals(0, response.jsonPath().getList("$").size());
 
-
-
 	}
 
 	@Test
 	@Order(13)
 	public void getBookingDataWithParam_Failed_Completed_null_Cancel_True_transporterId() throws Exception {
-
 
 		Response response = RestAssured.given().param("transporterId", "transporterId:123").param("cancel", true)
 				.header("accept", "application/json").header("Content-Type", "application/json").get().then().extract()
@@ -478,14 +472,11 @@ public class ApiTestRestAssured {
 		assertEquals(200, response.statusCode());
 		assertEquals(0, response.jsonPath().getList("$").size());
 
-
 	}
 
 	@Test
 	@Order(13)
 	public void getBookingDataWithParam_Failed_Completed_True_Cancel_null_transporterId() throws Exception {
-
-
 
 		Response response = RestAssured.given().param("transporterId", "transporterId:123").param("completed", true)
 				.header("accept", "application/json").header("Content-Type", "application/json").get().then().extract()
@@ -494,14 +485,11 @@ public class ApiTestRestAssured {
 		assertEquals(200, response.statusCode());
 		assertEquals(0, response.jsonPath().getList("$").size());
 
-
-
 	}
 
 	@Test
 	@Order(13)
 	public void getBookingDataWithParam_Failed_Completed_null_Cancel_True_postLoadId() throws Exception {
-
 
 		Response response = RestAssured.given().param("postLoadId", "shipper:123").param("cancel", true)
 				.header("accept", "application/json").header("Content-Type", "application/json").get().then().extract()
@@ -509,8 +497,6 @@ public class ApiTestRestAssured {
 
 		assertEquals(200, response.statusCode());
 		assertEquals(0, response.jsonPath().getList("$").size());
-
-
 
 	}
 
@@ -668,8 +654,6 @@ public class ApiTestRestAssured {
 		assertEquals(BookingConstants.uDataNotFound, response.jsonPath().getString("status"));
 
 	}
-
-
 
 	@Test
 	@Order(21)

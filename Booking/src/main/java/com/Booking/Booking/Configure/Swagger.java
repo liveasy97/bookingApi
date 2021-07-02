@@ -13,30 +13,22 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class Swagger {
 
 	@Bean
-	public Docket swaggerConfiguration(){
-		//return a prepared socket instance
-		return new Docket(DocumentationType.SWAGGER_2)
-				.select()
-				.build()
-				.apiInfo(apiDetails());
-				
-	}
-	
-	//url: http://localhost:8080/v2/api-docs
-	//swaggerUI: http://localhost:8080/swagger-ui/
-	
-	private ApiInfo apiDetails(){
-		
-		return new ApiInfo(
-				"Booking's Api",
-				"Api for Booking",
-				"1.0",
-				"Easy to use",
-				new springfox.documentation.service.Contact("Pranav Gupta", "https://play.google.com/store/apps/details?id=com.chirag4601.new_truck_booking_app", "liveasy97@gmail.com"),
-				"API License",
-				"null",
-				Collections.EMPTY_LIST);	
+	public Docket swaggerConfiguration() {
+		// return a prepared socket instance
+		return new Docket(DocumentationType.SWAGGER_2).select().build().apiInfo(apiDetails());
+
 	}
 
-	
+	// url: http://localhost:8080/v2/api-docs
+	// swaggerUI: http://localhost:8080/swagger-ui/
+
+	private ApiInfo apiDetails() {
+
+		return new ApiInfo("Booking's Api", "Api for Booking", "1.0", "Easy to use",
+				new springfox.documentation.service.Contact("Pranav Gupta",
+						"https://play.google.com/store/apps/details?id=com.chirag4601.new_truck_booking_app",
+						"liveasy97@gmail.com"),
+				"API License", "null", Collections.EMPTY_LIST);
+	}
+
 }
