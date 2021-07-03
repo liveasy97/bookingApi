@@ -1,4 +1,4 @@
-package com.Booking.Booking.ApiErrors;
+package com.Booking.Booking.Exception;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;

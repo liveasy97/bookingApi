@@ -1,4 +1,4 @@
-package com.Booking.Booking.ApiErrors;
+package com.Booking.Booking.Exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

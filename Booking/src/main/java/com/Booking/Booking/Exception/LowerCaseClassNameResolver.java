@@ -1,4 +1,4 @@
-package com.Booking.Booking.ApiErrors;
+package com.Booking.Booking.Exception;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;

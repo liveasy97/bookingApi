@@ -1,4 +1,4 @@
-package com.Booking.Booking.ApiErrors;
+package com.Booking.Booking.Exception;
 
 import java.util.HashMap;
 import java.util.Map;
