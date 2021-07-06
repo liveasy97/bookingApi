@@ -36,21 +36,21 @@ public class BookingController {
 
 	@PostMapping("/booking")
 	public ResponseEntity<BookingPostResponse> addBooking(@Valid @RequestBody BookingPostRequest request) {
-		log.info("Post Started");
+		log.info("Post Controller Started");
 		return new ResponseEntity<>(bookingService.addBooking(request), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/booking/{bookingId}")
 	public ResponseEntity<BookingPutResponse> updateBooking(@Valid @RequestBody BookingPutRequest request,
 			@PathVariable String bookingId) throws EntityNotFoundException {
-		log.info("Put Started");
+		log.info("Put Controller Started");
 
 		return new ResponseEntity<>(bookingService.updateBooking(bookingId, request), HttpStatus.OK);
 	}
 
 	@GetMapping("/booking/{bookingId}")
 	public ResponseEntity<BookingData> getDataById(@PathVariable String bookingId) throws EntityNotFoundException {
-		log.info("Get Started");
+		log.info("Get Controller Started");
 		return new ResponseEntity<>(bookingService.getDataById(bookingId), HttpStatus.FOUND);
 	}
 
@@ -60,7 +60,7 @@ public class BookingController {
 			@RequestParam(value = "completed", required = false) Boolean completed,
 			@RequestParam(value = "transporterId", required = false) String transporterId,
 			@RequestParam(value = "postLoadId", required = false) String postLoadId) throws EntityNotFoundException {
-		log.info("Get with Params Started");
+		log.info("Get with Params Controller Started");
 		return new ResponseEntity<>(bookingService.getDataById(pageNo, cancel, completed, transporterId, postLoadId),
 				HttpStatus.FOUND);
 	}
@@ -68,7 +68,7 @@ public class BookingController {
 	@DeleteMapping("/booking/{bookingId}")
 	public ResponseEntity<BookingDeleteResponse> deleteBooking(@PathVariable String bookingId)
 			throws EntityNotFoundException {
-		log.info("Delete Started");
+		log.info("Delete Controller Started");
 		return new ResponseEntity<>(bookingService.deleteBooking(bookingId), HttpStatus.OK);
 	}
 }

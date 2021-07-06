@@ -77,9 +77,9 @@ public class BookingServiceImpl implements BookingService {
 
 		try {
 			bookingDao.save(bookingData);
-			log.info(BookingConstants.success);
+			log.info("Booking Data is saved");
 		} catch (Exception ex) {
-			log.error(String.valueOf(ex));
+			log.error("Booking Data is not saved -----" + String.valueOf(ex));
 			throw ex;
 		}
 
@@ -96,11 +96,11 @@ public class BookingServiceImpl implements BookingService {
 		response.setBookingDate(bookingData.getBookingDate());
 
 		try {
-			log.info("Response returned");
+			log.info("Post Service Response returned");
 
 			return response;
 		} catch (Exception ex) {
-			log.error(String.valueOf(ex));
+			log.error("Post Service Response not returned -----" + String.valueOf(ex));
 			throw ex;
 
 		}
@@ -202,9 +202,9 @@ public class BookingServiceImpl implements BookingService {
 
 		try {
 			bookingDao.save(data);
-			log.info(BookingConstants.UPDATE_SUCCESS);
+			log.info("Booking Data is updated");
 		} catch (Exception ex) {
-			log.error(String.valueOf(ex));
+			log.error("Booking Data is not updated -----" + String.valueOf(ex));
 			throw ex;
 
 		}
@@ -223,10 +223,10 @@ public class BookingServiceImpl implements BookingService {
 		response.setCompletedDate(data.getCompletedDate());
 
 		try {
-			log.info("Response returned");
+			log.info("Put Service Response returned");
 			return response;
 		} catch (Exception ex) {
-			log.error(String.valueOf(ex));
+			log.error("Put Service Response not returned -----" + String.valueOf(ex));
 			throw ex;
 
 		}
@@ -244,10 +244,10 @@ public class BookingServiceImpl implements BookingService {
 		}
 
 		try {
-			log.info("Data returned");
+			log.info("Booking Data returned");
 			return bookingData;
 		} catch (Exception ex) {
-			log.error(String.valueOf(ex));
+			log.error("Booking Data not returned -----" + String.valueOf(ex));
 			throw ex;
 
 		}
@@ -289,10 +289,10 @@ public class BookingServiceImpl implements BookingService {
 
 		if (transporterId != null) {
 			try {
-				log.info("Data returned");
+				log.info("Booking Data with params returned");
 				return bookingDao.findByTransporterIdAndCancelAndCompleted(transporterId, cancel, completed, p);
 			} catch (Exception ex) {
-				log.error(String.valueOf(ex));
+				log.error("Booking Data with params not returned -----" + String.valueOf(ex));
 				throw ex;
 
 			}
@@ -301,10 +301,10 @@ public class BookingServiceImpl implements BookingService {
 
 		if (postLoadId != null) {
 			try {
-				log.info("Data returned");
+				log.info("Booking Data with params returned");
 				return bookingDao.findByPostLoadIdAndCancelAndCompleted(postLoadId, cancel, completed, p);
 			} catch (Exception ex) {
-				log.error(String.valueOf(ex));
+				log.error("Booking Data with params not returned -----" + String.valueOf(ex));
 				throw ex;
 
 			}
@@ -312,20 +312,20 @@ public class BookingServiceImpl implements BookingService {
 
 		if (cancel != null && completed != null) {
 			try {
-				log.info("Data returned");
+				log.info("Booking Data with params returned");
 				return bookingDao.findByCancelAndCompleted(cancel, completed, p);
 			} catch (Exception ex) {
-				log.error(String.valueOf(ex));
+				log.error("Booking Data with params not returned -----" + String.valueOf(ex));
 				throw ex;
 
 			}
 		}
 
 		try {
-			log.info("Data returned");
+			log.info("Booking Data with params returned");
 			return bookingDao.findAll();
 		} catch (Exception ex) {
-			log.error(String.valueOf(ex));
+			log.error("Booking Data with params not returned -----" + String.valueOf(ex));
 			throw ex;
 
 		}
@@ -339,9 +339,12 @@ public class BookingServiceImpl implements BookingService {
 
 		BookingData temp = bookingDao.findByBookingId(bookingId);
 
-		if (temp == null)
-			throw new EntityNotFoundException(BookingData.class, "bookingId", bookingId.toString());
-
+		if (temp == null) {
+			EntityNotFoundException ex = new EntityNotFoundException(BookingData.class, "bookingId", bookingId.toString());
+			log.error(String.valueOf(ex));
+			throw ex;
+		}
+		
 		try {
 			bookingDao.deleteById(bookingId);
 			log.info("Deleted");
@@ -354,10 +357,10 @@ public class BookingServiceImpl implements BookingService {
 		response.setStatus(constants.DELETE_SUCCESS);
 
 		try {
-			log.info("Deleted Success returned");
+			log.info("Deleted Service Response returned");
 			return response;
 		} catch (Exception ex) {
-			log.error(String.valueOf(ex));
+			log.error("Deleted Service Response not returned -----" + String.valueOf(ex));
 			throw ex;
 
 		}
