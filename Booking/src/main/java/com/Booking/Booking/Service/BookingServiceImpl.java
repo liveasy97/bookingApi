@@ -169,8 +169,10 @@ public class BookingServiceImpl implements BookingService {
 			if (request.getCompleted() == true) {
 				data.setCompleted(true);
 				data.setCancel(false);
-			} else {
-				data.setCompleted(false);
+			} else if (data.getCompleted() == true && request.getCompleted() == false) {
+				log.error(BookingConstants.uAlreadyCompleted);
+				throw new BusinessException(BookingConstants.uAlreadyCompleted);
+
 			}
 		}
 
@@ -340,11 +342,12 @@ public class BookingServiceImpl implements BookingService {
 		BookingData temp = bookingDao.findByBookingId(bookingId);
 
 		if (temp == null) {
-			EntityNotFoundException ex = new EntityNotFoundException(BookingData.class, "bookingId", bookingId.toString());
+			EntityNotFoundException ex = new EntityNotFoundException(BookingData.class, "bookingId",
+					bookingId.toString());
 			log.error(String.valueOf(ex));
 			throw ex;
 		}
-		
+
 		try {
 			bookingDao.deleteById(bookingId);
 			log.info("Deleted");
