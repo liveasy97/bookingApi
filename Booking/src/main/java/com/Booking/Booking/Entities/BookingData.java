@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(uniqueConstraints = {
-		@UniqueConstraint(name = "UniqueTransporterAndLoad", columnNames = { "transporterId", "loadid" }) })
+		@UniqueConstraint(name = "UniqueTransporterAndLoad", columnNames = { "transporterId", "loadId" }) })
 @NoArgsConstructor
 @AllArgsConstructor
 public @Data class BookingData {
