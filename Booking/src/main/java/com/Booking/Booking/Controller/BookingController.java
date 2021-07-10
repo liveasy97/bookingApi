@@ -51,7 +51,7 @@ public class BookingController {
 	@GetMapping("/booking/{bookingId}")
 	public ResponseEntity<BookingData> getDataById(@PathVariable String bookingId) throws EntityNotFoundException {
 		log.info("Get Controller Started");
-		return new ResponseEntity<>(bookingService.getDataById(bookingId), HttpStatus.FOUND);
+		return new ResponseEntity<>(bookingService.getDataById(bookingId), HttpStatus.OK);
 	}
 
 	@GetMapping("/booking")
@@ -62,7 +62,7 @@ public class BookingController {
 			@RequestParam(value = "postLoadId", required = false) String postLoadId) throws EntityNotFoundException {
 		log.info("Get with Params Controller Started");
 		return new ResponseEntity<>(bookingService.getDataById(pageNo, cancel, completed, transporterId, postLoadId),
-				HttpStatus.FOUND);
+				HttpStatus.OK);
 	}
 
 	@DeleteMapping("/booking/{bookingId}")
