@@ -325,7 +325,7 @@ public class BookingServiceImpl implements BookingService {
 
 		try {
 			log.info("Booking Data with params returned");
-			return bookingDao.findAll();
+			return bookingDao.getAll(p);
 		} catch (Exception ex) {
 			log.error("Booking Data with params not returned -----" + String.valueOf(ex));
 			throw ex;
