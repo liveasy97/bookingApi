@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.Booking.Booking.Constants.BookingConstants;
@@ -263,8 +264,8 @@ public class BookingServiceImpl implements BookingService {
 		if (pageNo == null) {
 			pageNo = 0;
 		}
-		Pageable p = PageRequest.of(pageNo, (int) BookingConstants.pageSize);
-		List<BookingData> temp = null;
+		Pageable page = PageRequest.of(pageNo, BookingConstants.pageSize,Sort.Direction.DESC,"timestamp");
+		//		List<BookingData> temp = null;
 
 		if ((cancel == null || completed == null) && (transporterId != null || postLoadId != null)) {
 			EntityNotFoundException ex = new EntityNotFoundException(BookingData.class, "completed",
@@ -292,7 +293,7 @@ public class BookingServiceImpl implements BookingService {
 		if (transporterId != null) {
 			try {
 				log.info("Booking Data with params returned");
-				return bookingDao.findByTransporterIdAndCancelAndCompleted(transporterId, cancel, completed, p);
+				return bookingDao.findByTransporterIdAndCancelAndCompleted(transporterId, cancel, completed, page);
 			} catch (Exception ex) {
 				log.error("Booking Data with params not returned -----" + String.valueOf(ex));
 				throw ex;
@@ -304,7 +305,7 @@ public class BookingServiceImpl implements BookingService {
 		if (postLoadId != null) {
 			try {
 				log.info("Booking Data with params returned");
-				return bookingDao.findByPostLoadIdAndCancelAndCompleted(postLoadId, cancel, completed, p);
+				return bookingDao.findByPostLoadIdAndCancelAndCompleted(postLoadId, cancel, completed, page);
 			} catch (Exception ex) {
 				log.error("Booking Data with params not returned -----" + String.valueOf(ex));
 				throw ex;
@@ -315,7 +316,7 @@ public class BookingServiceImpl implements BookingService {
 		if (cancel != null && completed != null) {
 			try {
 				log.info("Booking Data with params returned");
-				return bookingDao.findByCancelAndCompleted(cancel, completed, p);
+				return bookingDao.findByCancelAndCompleted(cancel, completed, page);
 			} catch (Exception ex) {
 				log.error("Booking Data with params not returned -----" + String.valueOf(ex));
 				throw ex;
@@ -325,7 +326,7 @@ public class BookingServiceImpl implements BookingService {
 
 		try {
 			log.info("Booking Data with params returned");
-			return bookingDao.getAll(p);
+			return bookingDao.getAll(page);
 		} catch (Exception ex) {
 			log.error("Booking Data with params not returned -----" + String.valueOf(ex));
 			throw ex;
