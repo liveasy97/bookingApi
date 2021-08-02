@@ -35,6 +35,6 @@ public class BookingConstants {
 	public static String URI = "/booking";
 	public static String ID_URI = "/booking/booking:492f08d9-132b-4d42-be47-bde1872775d7";
 
-	public static long pageSize = 15;
+	public static int pageSize = 15;
 
 }
