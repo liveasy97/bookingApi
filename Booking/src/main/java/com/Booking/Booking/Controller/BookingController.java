@@ -1,5 +1,6 @@
 package com.Booking.Booking.Controller;
 
+import java.net.ConnectException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -35,9 +36,13 @@ public class BookingController {
 	private BookingService bookingService;
 
 	@PostMapping("/booking")
-	public ResponseEntity<BookingPostResponse> addBooking(@Valid @RequestBody BookingPostRequest request) {
+	public ResponseEntity<BookingPostResponse> addBooking(@Valid @RequestBody BookingPostRequest request) throws Exception,ConnectException {
 		log.info("Post Controller Started");
-		return new ResponseEntity<>(bookingService.addBooking(request), HttpStatus.CREATED);
+		
+		ResponseEntity<BookingPostResponse> response = new ResponseEntity<>(bookingService.addBooking(request), HttpStatus.CREATED);
+		bookingService.updating_load_status_by_loadid(request.getLoadId());
+		return response;
+		//return new ResponseEntity<>(bookingService.addBooking(request), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/booking/{bookingId}")
