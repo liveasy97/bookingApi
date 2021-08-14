@@ -30,6 +30,7 @@ import com.Booking.Booking.Model.BookingPostResponse;
 import com.Booking.Booking.Model.BookingPutRequest;
 import com.Booking.Booking.Model.BookingPutResponse;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -384,24 +385,20 @@ public class BookingServiceImpl implements BookingService {
 
 	}
 	
-	
-	
 	@Async
-	@Retryable(maxAttempts = 10, value = { ConnectException.class, Exception.class, RuntimeException.class },
-	backoff = @Backoff(10000))
-	public void updating_load_status_by_loadid(String loadid) throws ConnectException, Exception
+	@Retryable(maxAttempts = 24*60/15, value = { ConnectException.class, Exception.class, RuntimeException.class },
+	backoff = @Backoff(15*60*1000))
+	public void updating_load_status_by_loadid(String loadid, String inputJson) throws ConnectException, Exception
 	{
+		Dotenv dotenv = Dotenv.load();
 		try {
-			//System.err.println("inside try");
 			log.info("started update load status");
 			Socket clientSocket = new Socket("localhost", 8080);
 			clientSocket.close();
 		    
-			RestAssured.baseURI = "http://localhost:8080/load";
+			RestAssured.baseURI = dotenv.get("loadurl");
 			
-			String inputJsonupdate = "{\"loadingPoint\":null,\"loadingPointCity\":null,\"loadingPointState\":null,\"postLoadId\":null,\"unloadingPoint\":null,\"unloadingPointCity\":null,\"unloadingPointState\":null,\"productType\":null,\"truckType\":null,\"noOfTrucks\":null,\"weight\":null,\"comment\":null,\"loadDate\":null,\"rate\":null,\"unitValue\":null,\"status\":\"ON_GOING\"}";
-
-			Response responseupdate = RestAssured.given().header("", "").body(inputJsonupdate)
+			Response responseupdate = RestAssured.given().header("", "").body(inputJson)
 					.header("accept", "application/json")
 					.header("Content-Type", "application/json")
 					.put("/" + loadid).then().extract().response();

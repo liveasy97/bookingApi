@@ -23,6 +23,6 @@ public interface BookingService {
 
 	BookingDeleteResponse deleteBooking(String bookingId);
 	
-	void updating_load_status_by_loadid(String loadid) throws ConnectException, Exception;
+	void updating_load_status_by_loadid(String loadid, String inputJson) throws ConnectException, Exception;
 
 }
