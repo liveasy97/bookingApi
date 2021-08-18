@@ -2,16 +2,14 @@ package com.Booking.Booking.Service;
 
 
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -274,7 +272,6 @@ public class BookingServiceImpl implements BookingService {
 
 	}
 
-	
 	@Override
 	public List<BookingData> getDataById(Integer pageNo, Boolean cancel, Boolean completed, String transporterId,
 			String postLoadId) {
@@ -389,25 +386,28 @@ public class BookingServiceImpl implements BookingService {
 
 	}
 	
+	
+	@Value("${LOAD_URL}")
+	private String loadUrl;
+	
+	@Value("${LOAD_IP}")
+	private String loadIp;
+	
+	@Value("${LOAD_PORT}")
+	private String loadPort;
+	
 	@Async
 	@Retryable(maxAttempts = 24*60/15, value = { ConnectException.class, Exception.class, RuntimeException.class },
 	backoff = @Backoff(15*60*1000))
 	public void updating_load_status_by_loadid(String loadid, String inputJson) throws ConnectException, Exception
 	{
-		
-		URL file_url = new URL("https://practice1221.s3.ap-south-1.amazonaws.com/test.txt");
-        BufferedReader in = new BufferedReader(new InputStreamReader(file_url.openStream()));
-
-        String ip, port;
-        ip = in.readLine();
-        port = in.readLine();
-        in.close();
-        
 		try {
 			log.info("started update load status");
-			Socket clientSocket = new Socket(ip, Integer.parseInt(port));
+			Socket clientSocket = new Socket(loadIp, Integer.parseInt(loadPort));
 			clientSocket.close();
-			RestAssured.baseURI = "http://"+ip+":"+port+ "/load";  
+		    
+			RestAssured.baseURI = loadUrl;
+			
 			Response responseupdate = RestAssured.given().header("", "").body(inputJson)
 					.header("accept", "application/json")
 					.header("Content-Type", "application/json")
@@ -417,7 +417,7 @@ public class BookingServiceImpl implements BookingService {
 		catch (ConnectException e) {
 			log.error("ConnectException: update load status failed");
 			throw e;
-		} catch (Exception e) {
+		}catch (Exception e) {
 			log.error("Exception: update load status failed");
 			throw e;
 		}
