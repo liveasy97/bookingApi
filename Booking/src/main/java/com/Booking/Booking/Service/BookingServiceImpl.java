@@ -1,13 +1,24 @@
 package com.Booking.Booking.Service;
 
+
+
+import java.net.ConnectException;
+import java.net.Socket;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.Booking.Booking.Constants.BookingConstants;
 import com.Booking.Booking.Dao.BookingDao;
@@ -20,19 +31,21 @@ import com.Booking.Booking.Model.BookingPostResponse;
 import com.Booking.Booking.Model.BookingPutRequest;
 import com.Booking.Booking.Model.BookingPutResponse;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class BookingServiceImpl implements BookingService {
-
 	@Autowired
 	private BookingDao bookingDao;
 
 	private BookingConstants constants;
 
 	@Override
-	public BookingPostResponse addBooking(BookingPostRequest request) {
+	public BookingPostResponse addBooking(BookingPostRequest request){
 
 		BookingData bookingData = new BookingData();
 		BookingPostResponse response = new BookingPostResponse();
@@ -45,10 +58,8 @@ public class BookingServiceImpl implements BookingService {
 
 		if (request.getRate() != null) {
 			if (request.getUnitValue() == null) {
-
 				log.error(constants.pUnitIsNull);
 				throw new BusinessException(constants.pUnitIsNull);
-
 			}
 
 			if (String.valueOf(request.getUnitValue()).equals("PER_TON")) {
@@ -107,9 +118,12 @@ public class BookingServiceImpl implements BookingService {
 		}
 	}
 
+	
+	//cancel = false, compleate true
 	@Override
 	public BookingPutResponse updateBooking(String bookingId, BookingPutRequest request) {
-
+		
+		
 		BookingPutResponse response = new BookingPutResponse();
 
 		BookingData data = bookingDao.findByBookingId(bookingId);
@@ -170,6 +184,7 @@ public class BookingServiceImpl implements BookingService {
 			if (request.getCompleted() == true) {
 				data.setCompleted(true);
 				data.setCancel(false);
+				////cancel = false complete true
 			} else if (data.getCompleted() == true && request.getCompleted() == false) {
 				log.error(BookingConstants.uAlreadyCompleted);
 				throw new BusinessException(BookingConstants.uAlreadyCompleted);
@@ -370,5 +385,41 @@ public class BookingServiceImpl implements BookingService {
 		}
 
 	}
-
+	
+	
+	@Value("${LOAD_URL}")
+	private String loadUrl;
+	
+	@Value("${LOAD_IP}")
+	private String loadIp;
+	
+	@Value("${LOAD_PORT}")
+	private String loadPort;
+	
+	@Async
+	@Retryable(maxAttempts = 24*60/15, value = { ConnectException.class, Exception.class, RuntimeException.class },
+	backoff = @Backoff(15*60*1000))
+	public void updating_load_status_by_loadid(String loadid, String inputJson) throws ConnectException, Exception
+	{
+		try {
+			log.info("started update load status");
+			Socket clientSocket = new Socket(loadIp, Integer.parseInt(loadPort));
+			clientSocket.close();
+		    
+			RestAssured.baseURI = loadUrl;
+			
+			Response responseupdate = RestAssured.given().header("", "").body(inputJson)
+					.header("accept", "application/json")
+					.header("Content-Type", "application/json")
+					.put("/" + loadid).then().extract().response();
+			log.info("update load status successful");
+		}
+		catch (ConnectException e) {
+			log.error("ConnectException: update load status failed");
+			throw e;
+		}catch (Exception e) {
+			log.error("Exception: update load status failed");
+			throw e;
+		}
+	}
 }
