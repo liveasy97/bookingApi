@@ -2,8 +2,11 @@ package com.Booking.Booking.Service;
 
 
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
@@ -271,6 +274,7 @@ public class BookingServiceImpl implements BookingService {
 
 	}
 
+	
 	@Override
 	public List<BookingData> getDataById(Integer pageNo, Boolean cancel, Boolean completed, String transporterId,
 			String postLoadId) {
@@ -390,22 +394,25 @@ public class BookingServiceImpl implements BookingService {
 	backoff = @Backoff(15*60*1000))
 	public void updating_load_status_by_loadid(String loadid, String inputJson) throws ConnectException, Exception
 	{
-		Dotenv dotenv = Dotenv.load();
+		
+		URL file_url = new URL("https://practice1221.s3.ap-south-1.amazonaws.com/test.txt");
+        BufferedReader in = new BufferedReader(new InputStreamReader(file_url.openStream()));
+
+        String ip, port;
+        ip = in.readLine();
+        port = in.readLine();
+        in.close();
+        
 		try {
 			log.info("started update load status");
-			Socket clientSocket = new Socket("localhost", 8080);
+			Socket clientSocket = new Socket(ip, Integer.parseInt(port));
 			clientSocket.close();
-		    
-			RestAssured.baseURI = dotenv.get("loadurl");
-			
+			RestAssured.baseURI = "http://"+ip+":"+port+ "/load";  
 			Response responseupdate = RestAssured.given().header("", "").body(inputJson)
 					.header("accept", "application/json")
 					.header("Content-Type", "application/json")
 					.put("/" + loadid).then().extract().response();
 			log.info("update load status successful");
-			System.err.println(responseupdate.asString());
-			System.err.println(responseupdate.statusCode());
-			System.err.println(responseupdate.jsonPath().getString("status"));
 		}
 		catch (ConnectException e) {
 			log.error("ConnectException: update load status failed");
