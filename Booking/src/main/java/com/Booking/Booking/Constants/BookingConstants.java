@@ -34,8 +34,8 @@ public class BookingConstants {
 	public static String POST_LOAD_ID = "shipper:1b8a1a38-868a-4113-8749-ff63ac3abb55";
 	public static String URI = "/booking";
 	public static String ID_URI = "/booking/booking:492f08d9-132b-4d42-be47-bde1872775d7";
-	public static String loadStatus_ongoing = "{\"loadingPoint\":null,\"loadingPointCity\":null,\"loadingPointState\":null,\"postLoadId\":null,\"unloadingPoint\":null,\"unloadingPointCity\":null,\"unloadingPointState\":null,\"productType\":null,\"truckType\":null,\"noOfTrucks\":null,\"weight\":null,\"comment\":null,\"loadDate\":null,\"rate\":null,\"unitValue\":null,\"status\":\"ON_GOING\"}";
-	public static String loadStatus_completed = "{\"loadingPoint\":null,\"loadingPointCity\":null,\"loadingPointState\":null,\"postLoadId\":null,\"unloadingPoint\":null,\"unloadingPointCity\":null,\"unloadingPointState\":null,\"productType\":null,\"truckType\":null,\"noOfTrucks\":null,\"weight\":null,\"comment\":null,\"loadDate\":null,\"rate\":null,\"unitValue\":null,\"status\":\"COMPLETED\"}";
+	public static String loadStatus_ongoing = "{\"status\":\"ON_GOING\"}";
+	public static String loadStatus_completed = "{\"status\":\"COMPLETED\"}";
 	public static int pageSize = 15;
 
 }
