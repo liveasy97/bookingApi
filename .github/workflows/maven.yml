@@ -32,5 +32,5 @@ jobs:
     - run: sudo docker image rm booking || true
     - run: sudo docker build -t booking .
     - run: sudo docker run --name docker-postgres -e POSTGRES_ROOT_PASSWORD=Varun09! -e POSTGRES_DATABASE=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Varun09! -d postgres:alpine || true
-    - run: sudo docker run -p 8090:8090 --name bookingContainer --link docker-postgres:postgres booking | echo "success" 
+    - run: sudo docker run -d --env-file /home/ubuntu/test.env -p 8090:8090 --name bookingContainer --link docker-postgres:postgres booking env | echo "success" 
  
