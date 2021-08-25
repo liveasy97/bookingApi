@@ -1,5 +1,6 @@
 package com.Booking.Booking.Controller;
 
+import java.net.ConnectException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Booking.Booking.Constants.BookingConstants;
 import com.Booking.Booking.Entities.BookingData;
 import com.Booking.Booking.Exception.EntityNotFoundException;
 import com.Booking.Booking.Model.BookingDeleteResponse;
@@ -35,17 +37,25 @@ public class BookingController {
 	private BookingService bookingService;
 
 	@PostMapping("/booking")
-	public ResponseEntity<BookingPostResponse> addBooking(@Valid @RequestBody BookingPostRequest request) {
+	public ResponseEntity<BookingPostResponse> addBooking(@Valid @RequestBody BookingPostRequest request) throws Exception,ConnectException {
 		log.info("Post Controller Started");
-		return new ResponseEntity<>(bookingService.addBooking(request), HttpStatus.CREATED);
+		
+		ResponseEntity<BookingPostResponse> response = new ResponseEntity<>(bookingService.addBooking(request), HttpStatus.CREATED);
+		bookingService.updating_load_status_by_loadid(request.getLoadId(), BookingConstants.loadStatus_ongoing);
+		return response;
+		//return new ResponseEntity<>(bookingService.addBooking(request), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/booking/{bookingId}")
 	public ResponseEntity<BookingPutResponse> updateBooking(@Valid @RequestBody BookingPutRequest request,
-			@PathVariable String bookingId) throws EntityNotFoundException {
+			@PathVariable String bookingId) throws EntityNotFoundException, ConnectException ,Exception {
 		log.info("Put Controller Started");
-
-		return new ResponseEntity<>(bookingService.updateBooking(bookingId, request), HttpStatus.OK);
+		ResponseEntity<BookingPutResponse> response = new ResponseEntity<>(bookingService.updateBooking(bookingId, request), HttpStatus.OK);
+		
+		if(!request.getCancel() && request.getCompleted())
+		bookingService.updating_load_status_by_loadid(bookingService.getDataById(bookingId).getLoadId(), BookingConstants.loadStatus_completed);
+		
+		return response;
 	}
 
 	@GetMapping("/booking/{bookingId}")

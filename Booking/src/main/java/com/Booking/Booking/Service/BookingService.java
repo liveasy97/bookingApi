@@ -1,5 +1,6 @@
 package com.Booking.Booking.Service;
 
+import java.net.ConnectException;
 import java.util.List;
 
 import com.Booking.Booking.Entities.BookingData;
@@ -21,5 +22,7 @@ public interface BookingService {
 			String postLoadId);
 
 	BookingDeleteResponse deleteBooking(String bookingId);
+	
+	void updating_load_status_by_loadid(String loadid, String inputJson) throws ConnectException, Exception;
 
 }
