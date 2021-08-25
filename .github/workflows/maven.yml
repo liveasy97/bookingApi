@@ -27,10 +27,8 @@ jobs:
       
     - run: cd ~/actions-runner/deploy/bookingApi/bookingApi/Booking
     - run: sudo docker container stop bookingContainer || true
-    - run: sudo docker container start docker-postgres || true
     - run: sudo docker container prune -f
     - run: sudo docker image rm booking || true
     - run: sudo docker build -t booking .
-    - run: sudo docker run --name docker-postgres -e POSTGRES_ROOT_PASSWORD=Varun09! -e POSTGRES_DATABASE=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Varun09! -d postgres:alpine || true
-    - run: sudo docker run -d --env-file /home/ubuntu/test.env -p 8090:8090 --name bookingContainer --link docker-postgres:postgres booking env | echo "success" 
+    - run: sudo docker run -d --env-file /home/ubuntu/test.env -p 8090:8090 --name bookingContainer booking env | echo "success" 
  
