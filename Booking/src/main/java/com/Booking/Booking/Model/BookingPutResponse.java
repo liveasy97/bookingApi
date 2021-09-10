@@ -2,11 +2,13 @@ package com.Booking.Booking.Model;
 
 import java.util.List;
 
-import com.Booking.Booking.Entities.BookingData.Unit;
+//import com.Booking.Booking.Entities.BookingData.Unit;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sharedEntity.BookingData.Unit;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
