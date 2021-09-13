@@ -5,7 +5,9 @@ package com.Booking.Booking.Service;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -456,44 +458,35 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public List<ResponseTesting> getDataTesting(Integer pageNo, Boolean cancel, Boolean completed, String transporterId,String postLoadId) {
 		
-		List<ResponseTesting> ls = new ArrayList<>();
-		
-		List<BookingData> fromBookingTable = null;
+		List<ResponseTesting> ls = new ArrayList<>();		
+		List<BookingData> bookingDataList = null;
 		if (pageNo == null) {
 			pageNo = 0;
 		}
-		
-		Pageable page = PageRequest.of(pageNo, BookingConstants.pageSize,Sort.Direction.DESC,"timestamp");
+		Pageable page = PageRequest.of(pageNo, BookingConstants.pageSize,Sort.Direction.DESC,"timestamp");	
 		
 		//from Booking table//
-		if (transporterId != null) {
-			
-			 fromBookingTable = bookingDao.findByTransporterIdAndCancelAndCompleted(transporterId, cancel, completed, page);
+		if (transporterId != null && postLoadId == null) {		
+			 bookingDataList = bookingDao.findByTransporterIdAndCancelAndCompletedWithJoinFetchTruckIds(transporterId, cancel, completed, page);
+			 log.info("bookingData call");
 		} 
+		if (postLoadId != null && transporterId == null) {		
+			bookingDataList = bookingDao.findByTransporterIdAndCancelAndCompletedWithJoinFetchTruckIds(transporterId, cancel, completed, page);
+			log.info("bookingData call");
+		}	
+		if (cancel != null && completed != null && transporterId == null && postLoadId == null) {		
+			bookingDataList = bookingDao.findByCancelAndCompleted(cancel, completed, page);	
+			log.info("bookingData call");
+		}		
+		if (bookingDataList == null || bookingDataList.isEmpty()) return null;
 
-		if (postLoadId != null) {
-			
-			 fromBookingTable = bookingDao.findByPostLoadIdAndCancelAndCompleted(transporterId, cancel, completed, page);
-		}
-		
-		if (cancel != null && completed != null) {
-			
-			fromBookingTable = bookingDao.findByCancelAndCompleted(cancel, completed, page);
-			
-		}
-		
-		if (fromBookingTable == null || fromBookingTable.isEmpty())
+		for (BookingData bookingData : bookingDataList) 
 		{
-			return null;
-		}
-		
-		for (BookingData var : fromBookingTable) 
-		{
-			ResponseTesting responseTesting = new ResponseTesting();
-			
-		    String loadId = var.getLoadId();
+			ResponseTesting responseTesting = new ResponseTesting();		
+		    String loadId = bookingData.getLoadId();
 		    
 		    // Get load from load table
+		    log.info("Fetching load: "+loadId);
 		    Optional<Load> load = loadDao.findByLoadId(loadId);
 		    
 		    if (load.isPresent()) {
@@ -502,44 +495,54 @@ public class BookingServiceImpl implements BookingService {
 		    }
 		    
 		    // Get transporter name from transporter table
-		    Optional<Transporter> transporter = transporterDao.findById(var.getTransporterId());
+		    log.info("Fetching transporter: "+bookingData.getTransporterId());
+		    Optional<Transporter> transporter = transporterDao.findById(bookingData.getTransporterId());
 		    if (transporter.isPresent()) {
 		    	responseTesting.setTransporterName(transporter.get().getTransporterName());		    	
 		    }
 		    
-		    List<String> truckIds = var.getTruckId();
-		    
-		    if (truckIds != null) {		    	
-		    	List<Truck> trucks = new ArrayList<>();
+		    List<String> truckIds = bookingData.getTruckId();	    
+		    // Get truck details from truck table
+		    if(truckIds != null)
+		    {
+		    	log.info("Get all truck data with truckIds: "+ String.join(", ", truckIds));
+		    	List<TruckData> truckDataList = truckDao.findAllById(truckIds);
 		    	
-		    	for(String eachTruckId : truckIds)
-		    	{
-		    		// Get truck details from truck table
-		    		TruckData truckData = truckDao.findByTruckId(eachTruckId);
+		    	if (truckDataList != null) {    	
+		    		List<Truck> trucks = new ArrayList<>();
+		    		List<String> driverIds = new ArrayList<>();
 		    		
-		    		if (truckData != null) {
+		    		truckDataList.forEach(truckdata -> driverIds.add(truckdata.getDriverId()));
+		    		
+		    		log.info("Fetching drivers with driverIds: "+ String.join(", ", driverIds));
+		    		List<Driver> driverDataList  = driverDao.findAllById(driverIds);
+
+		    		Map<String, Driver> driverMap = new HashMap<>();
+		    		if (driverDataList != null) {
+		    			log.info("Received driver count for load id :"+loadId+" : "+driverDataList.size());
+		    			driverDataList.forEach(driver -> driverMap.put(driver.getDriverId(), driver));
+		    		}
+		    		
+		    		for(TruckData truckdata : truckDataList)
+		    		{
 		    			Truck truck = new Truck();
-		    			truck.setTruckNo(truckData.getTruckNo());
-		    			truck.setTruckApproved(truckData.getTruckApproved());
-		    			truck.setImei(truckData.getImei());
+		    			truck.setTruckNo(truckdata.getTruckNo());
+		    			truck.setTruckApproved(truckdata.getTruckApproved());
+		    			truck.setImei(truckdata.getImei());	
 		    			
-		    			// Get driver details from driver table
-		    			Optional<Driver> driver = driverDao.findById(truckData.getDriverId());
-		    			if (driver.isPresent()) {
-		    				truck.setDriverName(driver.get().getDriverName());
-		    				truck.setDriverPhoneNumber(driver.get().getPhoneNum());
+		    			// Get driver details from driver map
+		    			Driver driver = driverMap.get(truckdata.getDriverId());
+		    			if (driver != null) {
+		    				truck.setDriverName(driver.getDriverName());
+		    				truck.setDriverPhoneNumber(driver.getPhoneNum());
 		    			}
-		    			
 		    			trucks.add(truck);
 		    		}
+		    		responseTesting.setTrucks(trucks);
 		    	}
-		    	
-		    	responseTesting.setTrucks(trucks);
 		    }
-
 		    ls.add(responseTesting);
-		}
-		
+		}		
 		return ls;
 	}
 }
