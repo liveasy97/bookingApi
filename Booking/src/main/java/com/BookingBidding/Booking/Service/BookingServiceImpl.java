@@ -483,6 +483,18 @@ public class BookingServiceImpl implements BookingService {
 		for (BookingData bookingData : bookingDataList) 
 		{
 			ResponseTesting responseTesting = new ResponseTesting();		
+		
+			responseTesting.setBookingId(bookingData.getBookingId());
+			responseTesting.setTransporterId(bookingData.getTransporterId());
+			responseTesting.setPostLoadId(bookingData.getPostLoadId());
+			responseTesting.setRate(bookingData.getRate());
+			responseTesting.setUnitValue(bookingData.getUnitValue());
+			responseTesting.setTruckId(bookingData.getTruckId());
+			responseTesting.setCancel(bookingData.getCancel());
+			responseTesting.setCompleted(bookingData.getCompleted());
+			responseTesting.setBookingDate(bookingData.getBookingDate());
+			responseTesting.setCompletedDate(bookingData.getCompletedDate());
+		
 		    String loadId = bookingData.getLoadId();
 		    
 		    // Get load from load table
@@ -490,6 +502,7 @@ public class BookingServiceImpl implements BookingService {
 		    Optional<Load> load = loadDao.findByLoadId(loadId);
 		    
 		    if (load.isPresent()) {
+		    	responseTesting.setLoadId(load.get().getLoadId());
 		    	responseTesting.setLoadingPointCity(load.get().getLoadingPointCity());
 		    	responseTesting.setUnloadingPointCity(load.get().getUnloadingPointCity());		    	
 		    }
