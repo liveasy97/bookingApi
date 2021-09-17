@@ -7,6 +7,7 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sharedEntity.BookingData;
 import sharedEntity.Transporter;
 
 
@@ -18,4 +19,5 @@ public  @Data class ResponseTesting {
 	private String unloadingPointCity; //loadtable
 	private List<Truck> trucks;  //truckdata table
 	private String transporterName;  //transporter table
+	private BookingData bookingDetails;
 }

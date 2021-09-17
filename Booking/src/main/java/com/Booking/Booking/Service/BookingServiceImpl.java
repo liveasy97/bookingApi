@@ -501,7 +501,7 @@ public class BookingServiceImpl implements BookingService {
 		    	responseTesting.setTransporterName(transporter.get().getTransporterName());		    	
 		    }
 		    
-		    List<String> truckIds = bookingData.getTruckId();	    
+		    List<String> truckIds = bookingData.getTruckId();	
 		    // Get truck details from truck table
 		    if(truckIds != null)
 		    {
@@ -539,6 +539,7 @@ public class BookingServiceImpl implements BookingService {
 		    			trucks.add(truck);
 		    		}
 		    		responseTesting.setTrucks(trucks);
+		    		responseTesting.setBookingDetails(bookingData);
 		    	}
 		    }
 		    ls.add(responseTesting);
